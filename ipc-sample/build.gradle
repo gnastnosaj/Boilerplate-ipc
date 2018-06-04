@@ -29,6 +29,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.github.gnastnosaj.Boilerplate:boilerplate:2.0.0'
+
     implementation project(':ipc')
     implementation project(':ipc.middleware-sample')
 }
