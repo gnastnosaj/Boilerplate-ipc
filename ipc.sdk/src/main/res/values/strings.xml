@@ -1,0 +1,5 @@
+<resources>
+    <string name="ipc_service_action_name">com.github.gnastnosaj.boilerplate.ipc.IPCService</string>
+    <string name="ipc_in_main_thread_exception">IPC is not allowed in main thread.</string>
+    <string name="ipc_service_not_connected_exception">IPC service not connected, Please try again later.</string>
+</resources>

@@ -1,0 +1,29 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.gnastnosaj.boilerplate.ipc">
+
+    <permission
+        android:name="com.github.gnastnosaj.boilerplate.permission.ipc"
+        android:protectionLevel="signature" />
+
+    <application>
+
+        <provider
+            android:name=".IPCService$IPCServiceProvider"
+            android:authorities="${applicationId}.IPCService$IPCServiceProvider"
+            android:exported="false"
+            android:multiprocess="false" />
+
+        <service
+            android:name=".IPCService"
+            android:exported="true"
+            android:process=":ipc">
+
+            <intent-filter>
+                <action android:name="com.github.gnastnosaj.boilerplate.ipc.IPCService" />
+            </intent-filter>
+
+        </service>
+
+    </application>
+
+</manifest>

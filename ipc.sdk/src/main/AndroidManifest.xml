@@ -1,0 +1,15 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.gnastnosaj.boilerplate.ipc.sdk">
+
+    <uses-permission android:name="com.github.gnastnosaj.aidl.permission.OPERATION_HARDWARE" />
+
+    <application>
+
+        <provider
+            android:name=".IPCSDK$Provider"
+            android:authorities="${applicationId}.IPCSDK$Provider"
+            android:exported="false"
+            android:multiprocess="false" />
+
+    </application>
+</manifest>

@@ -1,0 +1,1 @@
+include ':ipc', ':ipc.middleware', ':ipc.aidl', ':ipc.sdk', ':ipc.middleware-sample', ':ipc-sample', ':ipc.sdk-sample'

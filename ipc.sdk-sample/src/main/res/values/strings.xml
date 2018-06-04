@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ipc.sdk-sample</string>
+    <string name="ipc_service_package_name">com.github.gnastnosaj.boilerplate.ipc.sample</string>
+    <string name="exec">exec</string>
+</resources>

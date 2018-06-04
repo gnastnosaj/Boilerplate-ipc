@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Boilerplate.IPC.iml" filepath="$PROJECT_DIR$/Boilerplate.IPC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ipc/ipc.iml" filepath="$PROJECT_DIR$/ipc/ipc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ipc-sample/ipc-sample.iml" filepath="$PROJECT_DIR$/ipc-sample/ipc-sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ipc.aidl/ipc.aidl.iml" filepath="$PROJECT_DIR$/ipc.aidl/ipc.aidl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ipc.middleware/ipc.middleware.iml" filepath="$PROJECT_DIR$/ipc.middleware/ipc.middleware.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ipc.middleware-sample/ipc.middleware-sample.iml" filepath="$PROJECT_DIR$/ipc.middleware-sample/ipc.middleware-sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ipc.sdk/ipc.sdk.iml" filepath="$PROJECT_DIR$/ipc.sdk/ipc.sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ipc.sdk-sample/ipc.sdk-sample.iml" filepath="$PROJECT_DIR$/ipc.sdk-sample/ipc.sdk-sample.iml" />
+    </modules>
+  </component>
+</project>
