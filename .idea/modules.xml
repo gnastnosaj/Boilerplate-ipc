@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Boilerplate.IPC.iml" filepath="$PROJECT_DIR$/Boilerplate.IPC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Boilerplate-ipc.iml" filepath="$PROJECT_DIR$/Boilerplate-ipc.iml" />
       <module fileurl="file://$PROJECT_DIR$/ipc/ipc.iml" filepath="$PROJECT_DIR$/ipc/ipc.iml" />
       <module fileurl="file://$PROJECT_DIR$/ipc-sample/ipc-sample.iml" filepath="$PROJECT_DIR$/ipc-sample/ipc-sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/ipc.aidl/ipc.aidl.iml" filepath="$PROJECT_DIR$/ipc.aidl/ipc.aidl.iml" />
