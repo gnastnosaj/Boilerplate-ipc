@@ -75,7 +75,7 @@ public class IPCSDKSampleActivity extends BaseActivity {
 
         findViewById(R.id.exec).setOnClickListener(v ->
                 IPCSDK.getInstance()
-                        .exec("com.github.gnastnosaj.boilerplate.ipc.middleware.sample", new IPCRequest("", new Object[]{"ipc sample command"}))
+                        .exec("com.github.gnastnosaj.boilerplate.ipc.middleware.sample", new IPCRequest("ipc sample command"))
                         .compose(bindUntilEvent(ActivityEvent.DESTROY))
                         .subscribe(
                                 tick -> Toast.makeText(IPCSDKSampleActivity.this, tick.getResults()[0].toString(), Toast.LENGTH_SHORT).show(),

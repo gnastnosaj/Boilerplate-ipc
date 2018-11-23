@@ -12,7 +12,7 @@ public class IPCResponse implements Parcelable {
         this.results = results;
     }
 
-    public IPCResponse(int errorCode, Object... results) {
+    public IPCResponse(int errorCode, Object[] results) {
         this.errorCode = errorCode;
         this.results = results;
     }

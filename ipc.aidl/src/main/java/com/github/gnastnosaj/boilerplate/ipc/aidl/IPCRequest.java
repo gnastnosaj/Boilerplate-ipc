@@ -12,7 +12,7 @@ public class IPCRequest implements Parcelable {
         this.args = args;
     }
 
-    public IPCRequest(String action, Object... args) {
+    public IPCRequest(String action, Object[] args) {
         this.action = action;
         this.args = args;
     }
