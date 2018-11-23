@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCCallback;
 import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCException;
+import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCRequest;
+import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCResponse;
 import com.github.gnastnosaj.boilerplate.ipc.sdk.IPCSDK;
 import com.github.gnastnosaj.boilerplate.rxbus.RxHelper;
 import com.github.gnastnosaj.boilerplate.ui.activity.BaseActivity;
@@ -29,11 +31,11 @@ public class IPCSDKSampleActivity extends BaseActivity {
         Observable.create(subscriber -> {
             IPCSDK.getInstance().subscribe("sample", new IPCCallback.Stub() {
                 @Override
-                public void onNext(String next) throws RemoteException {
+                public void onNext(IPCResponse next) throws RemoteException {
                     Observable.just(next)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
-                                    tick -> Toast.makeText(IPCSDKSampleActivity.this, "register 1:" + tick, Toast.LENGTH_SHORT).show(),
+                                    tick -> Toast.makeText(IPCSDKSampleActivity.this, "register 1:" + tick.getResults()[0], Toast.LENGTH_SHORT).show(),
                                     throwable -> Toast.makeText(IPCSDKSampleActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show()
                             );
                 }
@@ -56,8 +58,8 @@ public class IPCSDKSampleActivity extends BaseActivity {
 
         IPCSDK.getInstance().register("sample", new IPCSDK.Callback() {
             @Override
-            public void onNext(String next) throws RemoteException {
-                Toast.makeText(IPCSDKSampleActivity.this, "register 2:" + next, Toast.LENGTH_SHORT).show();
+            public void onNext(IPCResponse next) throws RemoteException {
+                Toast.makeText(IPCSDKSampleActivity.this, "register 2:" + next.getResults()[0], Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -69,14 +71,14 @@ public class IPCSDKSampleActivity extends BaseActivity {
             public void onError(IPCException e) throws RemoteException {
 
             }
-        }.scheduler(AndroidSchedulers.mainThread())).subscribe(callback -> callback.onNext("hehe"), throwable -> Toast.makeText(IPCSDKSampleActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show());
+        }.scheduler(AndroidSchedulers.mainThread())).subscribe(callback -> callback.onNext(new IPCResponse("hehe")), throwable -> Toast.makeText(IPCSDKSampleActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show());
 
         findViewById(R.id.exec).setOnClickListener(v ->
                 IPCSDK.getInstance()
-                        .exec("com.github.gnastnosaj.boilerplate.ipc.middleware.sample", "ipc sample command")
+                        .exec("com.github.gnastnosaj.boilerplate.ipc.middleware.sample", new IPCRequest("", new Object[]{"ipc sample command"}))
                         .compose(bindUntilEvent(ActivityEvent.DESTROY))
                         .subscribe(
-                                tick -> Toast.makeText(IPCSDKSampleActivity.this, tick, Toast.LENGTH_SHORT).show(),
+                                tick -> Toast.makeText(IPCSDKSampleActivity.this, tick.getResults()[0].toString(), Toast.LENGTH_SHORT).show(),
                                 throwable -> Toast.makeText(IPCSDKSampleActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show(),
                                 () -> Toast.makeText(IPCSDKSampleActivity.this, "complete", Toast.LENGTH_SHORT).show()
                         )

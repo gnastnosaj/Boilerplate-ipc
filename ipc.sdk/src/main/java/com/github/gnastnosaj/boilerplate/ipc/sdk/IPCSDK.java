@@ -19,6 +19,8 @@ import android.support.annotation.Nullable;
 import com.github.gnastnosaj.boilerplate.ipc.aidl.IPC;
 import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCCallback;
 import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCException;
+import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCRequest;
+import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCResponse;
 import com.github.gnastnosaj.boilerplate.rxbus.RxHelper;
 
 import java.util.concurrent.CountDownLatch;
@@ -59,8 +61,8 @@ public class IPCSDK {
         return instance;
     }
 
-    public Observable<String> exec(String scheme, String data) {
-        return Observable.<String>create(subscriber -> exec(scheme, data, new IPCRxCallback(subscriber))).compose(RxHelper.rxSchedulerHelper());
+    public Observable<IPCResponse> exec(String scheme, IPCRequest data) {
+        return Observable.<IPCResponse>create(subscriber -> exec(scheme, data, new IPCRxCallback(subscriber))).compose(RxHelper.rxSchedulerHelper());
     }
 
     public Observable<Callback> register(Callback callback) {
@@ -100,7 +102,7 @@ public class IPCSDK {
     }
 
     @Deprecated
-    public void exec(String scheme, String data, IPCCallback.Stub callback) throws IPCInMainThreadException, ServiceNotConnectedException, RemoteException {
+    public void exec(String scheme, IPCRequest data, IPCCallback.Stub callback) throws IPCInMainThreadException, ServiceNotConnectedException, RemoteException {
         ensure();
 
         ipc.exec(scheme, data, callback);
@@ -239,7 +241,7 @@ public class IPCSDK {
 
             Callback delegate = new Callback() {
                 @Override
-                public void onNext(String next) throws RemoteException {
+                public void onNext(IPCResponse next) throws RemoteException {
                     Observable.just(origin).observeOn(scheduler).subscribe(callback -> callback.onNext(next));
                 }
 
@@ -259,19 +261,19 @@ public class IPCSDK {
     }
 
     private final static class IPCRxCallback extends Callback {
-        private ObservableEmitter<String> emitter;
+        private ObservableEmitter<IPCResponse> emitter;
 
         public IPCRxCallback() {
             super();
         }
 
-        public IPCRxCallback(ObservableEmitter<String> emitter) {
+        public IPCRxCallback(ObservableEmitter<IPCResponse> emitter) {
             this();
             this.emitter = emitter;
         }
 
         @Override
-        public void onNext(String next) throws RemoteException {
+        public void onNext(IPCResponse next) throws RemoteException {
             if (emitter != null) {
                 emitter.onNext(next);
             }

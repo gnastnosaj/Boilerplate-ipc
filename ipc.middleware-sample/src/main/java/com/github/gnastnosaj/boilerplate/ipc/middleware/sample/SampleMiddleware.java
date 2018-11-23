@@ -2,6 +2,8 @@ package com.github.gnastnosaj.boilerplate.ipc.middleware.sample;
 
 import android.content.Context;
 
+import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCRequest;
+import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCResponse;
 import com.github.gnastnosaj.boilerplate.ipc.middleware.IPCEvent;
 import com.github.gnastnosaj.boilerplate.ipc.middleware.IPCEventBus;
 import com.github.gnastnosaj.boilerplate.ipc.middleware.IPCMiddleware;
@@ -25,8 +27,8 @@ public class SampleMiddleware implements IPCMiddleware {
     }
 
     @Override
-    public void exec(String scheme, String data, IPCMiddlewareCallback callback) {
-        callback.perform(scheme);
+    public void exec(String scheme, IPCRequest data, IPCMiddlewareCallback callback) {
+        callback.onNext(new IPCResponse(scheme));
 
         new Thread(() -> {
             try {
@@ -35,8 +37,8 @@ public class SampleMiddleware implements IPCMiddleware {
                 e.printStackTrace();
             }
 
-            callback.perform(data);
-            callback.end();
+            callback.onNext(new IPCResponse(new SampleParcelable(data.getArgs()[0].toString())));
+            callback.onComplete();
         }).start();
 
         new Thread(() -> {

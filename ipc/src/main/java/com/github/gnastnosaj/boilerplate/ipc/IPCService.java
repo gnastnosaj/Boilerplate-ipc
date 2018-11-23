@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,8 @@ import android.support.annotation.Nullable;
 import com.github.gnastnosaj.boilerplate.ipc.aidl.IPC;
 import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCCallback;
 import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCException;
+import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCRequest;
+import com.github.gnastnosaj.boilerplate.ipc.aidl.IPCResponse;
 import com.github.gnastnosaj.boilerplate.ipc.middleware.IPCEvent;
 import com.github.gnastnosaj.boilerplate.ipc.middleware.IPCEventBus;
 import com.github.gnastnosaj.boilerplate.ipc.middleware.IPCMiddleware;
@@ -80,24 +83,29 @@ public class IPCService extends Service {
         }
 
         @Override
-        public void exec(String scheme, String data, IPCCallback callback) throws RemoteException {
-            List<Observable<String>> observables = new ArrayList<>();
+        public void exec(String scheme, IPCRequest data, IPCCallback callback) throws RemoteException {
+            List<Observable<IPCResponse>> observables = new ArrayList<>();
 
             for (IPCMiddleware middleware : middlewares) {
                 if (middleware.accept(scheme)) {
                     observables.add(Observable.create(subscriber -> middleware.exec(scheme, data, new IPCMiddlewareCallback() {
                         @Override
-                        public void perform(String data) {
+                        public void onNext(IPCResponse data) {
                             try {
                                 callback.onNext(data);
-                            } catch (RemoteException e) {
-                                subscriber.onError(e);
+                            } catch (Throwable throwable) {
+                                subscriber.onError(throwable);
                             }
                             subscriber.onNext(data);
                         }
 
                         @Override
-                        public void end() {
+                        public void onError(Throwable throwable) {
+                            subscriber.onError(throwable);
+                        }
+
+                        @Override
+                        public void onComplete() {
                             subscriber.onComplete();
                         }
                     })));
@@ -112,7 +120,7 @@ public class IPCService extends Service {
                         .subscribe(
                                 count -> {
                                 },
-                                throwable -> callback.onError(new IPCException(throwable)),
+                                throwable -> callback.onError(new IPCException(throwable.getMessage(), throwable)),
                                 () -> callback.onComplete()
                         );
             }
@@ -123,12 +131,12 @@ public class IPCService extends Service {
             Disposable disposable = RxBus.getInstance().toObserverable().subscribe(event -> {
                 if (event instanceof IPCEvent) {
                     try {
-                        callback.onNext(event.toString());
-                    } catch (Exception e) {
+                        callback.onNext(new IPCResponse(event instanceof Parcelable ? event : event.toString()));
+                    } catch (Throwable throwable) {
                         dispose(callback);
                     }
                 }
-            }, throwable -> callback.onError(new IPCException(throwable)));
+            }, throwable -> callback.onError(new IPCException(throwable.getMessage(), throwable)));
             subscriptions.put(callback, disposable);
         }
 
@@ -148,12 +156,11 @@ public class IPCService extends Service {
 
             Disposable disposable = observable.subscribe(event -> {
                 try {
-                    callback.onNext(event.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    callback.onNext(new IPCResponse(event instanceof Parcelable ? event : event.toString()));
+                } catch (Throwable throwable) {
                     unregister(tag, callback);
                 }
-            }, throwable -> callback.onError(new IPCException(throwable)));
+            }, throwable -> callback.onError(new IPCException(throwable.getMessage(), throwable)));
             subscriptions.put(callback, disposable);
         }
 
